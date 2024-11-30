@@ -1,5 +1,6 @@
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class VirtualThreads {
@@ -10,16 +11,19 @@ public class VirtualThreads {
             numTasks = Integer.parseInt(args[0]);
         }
 
-        List<Thread> threads = new ArrayList<>();
+        List<Thread> threads = new LinkedList<>();
+        Duration duration = Duration.ofSeconds(10);
+
+        Runnable sleepRunnable = () -> {
+            try {
+                Thread.sleep(duration);
+            } catch (InterruptedException e) {
+                // Handle exception
+            }
+        };
 
         for (int i = 0; i < numTasks; i++) {
-            Thread thread = Thread.startVirtualThread(() -> {
-                try {
-                    Thread.sleep(Duration.ofSeconds(10));
-                } catch (InterruptedException e) {
-                    // Handle exception
-                }
-            });
+            Thread thread = Thread.startVirtualThread(sleepRunnable);
             threads.add(thread);
         }
 
